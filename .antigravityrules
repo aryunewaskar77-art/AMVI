@@ -1,0 +1,24 @@
+# AMVI Architecture & Coding Guidelines
+
+## Next.js App Router Conventions
+- Prefer React Server Components (RSC) by default for data fetching, rendering, and performance optimization.
+- Reserve `'use client'` strictly for leaf components requiring user interactivity, browser APIs, or Zustand client-side state.
+- Keep data fetching on the server. Never pass sensitive keys, admin clients, or private credentials to client components.
+- Mutations must be implemented via Next.js Server Actions placed in `src/app/actions/` marked with `'use server'`.
+- Validate all server action inputs and handle authorization and errors gracefully.
+
+## Upstash Redis & Cache Strategy
+- Implement the Cache-Aside pattern for read-heavy resources (such as artwork catalog listings, product details).
+- Cache reads must be wrapped in resilient try/catch blocks with automatic fallback to Supabase PostgreSQL when Redis is unavailable or unconfigured.
+- Invalidate or update Redis keys upon successful mutations in server actions.
+- Enforce checkout rate limiting using `@upstash/ratelimit` before executing order creation or payment processing.
+
+## TypeScript Standards
+- Typed TypeScript interfaces for all data structures: strict typing is mandatory; avoid `any` or loose untyped objects.
+- Keep database entities synchronized with `src/types/database.types.ts`.
+- Return explicit types for all server actions and utility helpers.
+
+## Supabase Client Usage
+- Use `src/lib/supabase/client.ts` (`createBrowserClient`) strictly in Client Components.
+- Use `src/lib/supabase/server.ts` (`createServerClient`) in Server Components, Server Actions, and Route Handlers with async cookie management.
+- Use `src/lib/supabase/admin.ts` (`createClient` with service role key) exclusively in secured server-side operations (e.g., admin verification, internal background tasks, webhook handlers). Never expose the service role key to the browser.
