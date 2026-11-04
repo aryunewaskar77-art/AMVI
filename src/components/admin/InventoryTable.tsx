@@ -120,10 +120,10 @@ export function InventoryTable({
         <div className="px-5 py-3 border-b border-zinc-200 bg-zinc-50/50 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-zinc-900">
-              Active Inventory
+              Catalog Inventory
             </span>
             <span className="text-[11px] text-zinc-400">
-              ({artworks.length} items cataloged)
+              ({artworks.length} items cataloged • 0-unit items preserved for admin)
             </span>
           </div>
         </div>

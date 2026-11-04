@@ -20,9 +20,9 @@ export function getArtworkItemCacheKey(id: string): string {
 export async function getAvailableArtworks(): Promise<Artwork[]> {
   // 1. Check local persistent store first for immediate consistency
   try {
-    const localPieces = getLocalArtworks().filter((a) => a.is_available);
-    if (localPieces && localPieces.length > 0) {
-      return localPieces;
+    const allLocal = getLocalArtworks();
+    if (allLocal && allLocal.length > 0) {
+      return allLocal.filter((a) => a.is_available && (typeof a.quantity !== "number" || a.quantity > 0));
     }
   } catch (localErr) {
     console.warn("[getAvailableArtworks localStore warning]:", localErr);
