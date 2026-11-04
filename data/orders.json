@@ -116,5 +116,49 @@
         }
       }
     ]
+  },
+  {
+    "id": "e9b14c72-9a3d-42ef-b158-71829e0c5a14",
+    "customer_name": "Aaryaa Newaskar",
+    "customer_email": "aryu.newaskar77@gmail.com",
+    "customer_phone": "+91 89890 35701",
+    "shipping_address": {
+      "address_line1": "F-604, Sahaj Residency",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postal_code": "400026",
+      "country": "India"
+    },
+    "total_amount": 64000,
+    "payment_method": "manual_upi",
+    "transaction_ref": "519283746102",
+    "receipt_url": null,
+    "status": "delivered",
+    "created_at": "2026-11-02T14:20:00.000Z",
+    "order_items": [
+      {
+        "artwork_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c51",
+        "price_at_purchase": 64000,
+        "artwork": {
+          "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c51",
+          "title": "Celestial Ganesha",
+          "artist_name": "R. Ramanathan",
+          "description": "Classical Thanjavur (Tanjore) sacred portrait embossed with relief gesso paste, adorned with genuine 22-carat gold foil leafing and semi-precious Jaipur stones on treated teakwood board.",
+          "price": 64000,
+          "medium": "22K Gold Foil, Semi-Precious Stones & Gesso on Teakwood",
+          "dimensions": "24 x 18 inches",
+          "image_url": "https://images.unsplash.com/photo-1582561121160-c4887db5e4d2?auto=format&fit=crop&w=1200&q=80",
+          "is_available": false,
+          "created_at": "2026-10-02T10:00:00.000Z"
+        }
+      }
+    ],
+    "tracking_details": {
+      "carrier": "Blue Dart Express",
+      "tracking_number": "AMVI-189204",
+      "dispatched_at": "2026-11-02T16:00:00.000Z",
+      "out_for_delivery_at": "2026-11-03T09:30:00.000Z",
+      "delivered_at": "2026-11-03T14:45:00.000Z"
+    }
   }
 ]

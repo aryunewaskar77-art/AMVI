@@ -445,6 +445,11 @@ export function OrdersTable({ orders, onOrderUpdated }: OrdersTableProps) {
                           <Clock className="h-3 w-3" />
                           Pending Audit
                         </span>
+                      ) : order.status === "cancelled" ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-1 text-[11px] font-semibold text-red-800">
+                          <XCircle className="h-3 w-3" />
+                          Cancelled
+                        </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-600">
                           <AlertTriangle className="h-3 w-3" />
