@@ -265,23 +265,34 @@ export async function rejectOrderPaymentAction(
   try {
     let artworkIds: string[] = [];
 
-    // 1. Get artwork IDs
+    // 1. Get order details and previous status
+    let previousStatus: string | undefined;
     try {
       const { getLocalOrderById } = await import("@/lib/orders-local-store");
       const localOrder = getLocalOrderById(orderId);
       if (localOrder) {
+        previousStatus = localOrder.status;
         artworkIds = localOrder.order_items.map((i) => i.artwork_id);
       }
     } catch (e) {
       console.warn("[Local Order Lookup Warning]:", e);
     }
 
-    // 2. Mark order cancelled in local store
+    // 2. Mark order cancelled and restore artwork quantity in local store
     try {
       const { updateLocalOrderStatus } = await import("@/lib/orders-local-store");
+      const { restoreArtworkStock } = await import("@/lib/artworks-local-store");
+
       updateLocalOrderStatus(orderId, { status: "cancelled" });
+
+      // Restore stock quantity if the order wasn't already cancelled
+      if (previousStatus !== "cancelled") {
+        for (const artId of artworkIds) {
+          restoreArtworkStock(artId, 1);
+        }
+      }
     } catch (e) {
-      console.warn("[Local Store Cancel Warning]:", e);
+      console.warn("[Local Store Cancel/Restore Warning]:", e);
     }
 
     // 3. Update Supabase if reachable

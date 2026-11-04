@@ -326,17 +326,32 @@ export async function cancelOrderAction(
   }
 
   try {
-    // 1. Update local store
+    // 1. Update local store and restore stock quantity
     try {
       const { updateLocalOrderStatus, getLocalOrderById } = await import(
         "@/lib/orders-local-store"
       );
-      updateLocalOrderStatus(orderId, { status: "cancelled" });
+      const { restoreArtworkStock } = await import("@/lib/artworks-local-store");
+      const { invalidateArtworkCache } = await import("@/lib/cache-invalidation");
+
       const localOrder = getLocalOrderById(orderId);
-      if (localOrder && sessionId) {
+      const previousStatus = localOrder?.status;
+
+      // Only restore inventory if the order was not already cancelled
+      if (localOrder && previousStatus !== "cancelled") {
+        updateLocalOrderStatus(orderId, { status: "cancelled" });
+
         for (const item of localOrder.order_items) {
-          await releaseArtworkLock(item.artwork_id, sessionId);
+          if (sessionId) {
+            await releaseArtworkLock(item.artwork_id, sessionId);
+          }
+          // Restore the deducted stock quantity (default 1) and make it available again
+          restoreArtworkStock(item.artwork_id, 1);
+          await invalidateArtworkCache(item.artwork_id);
         }
+        await invalidateArtworkCache();
+      } else {
+        updateLocalOrderStatus(orderId, { status: "cancelled" });
       }
     } catch (localCancelErr) {
       console.warn("[Local Cancel Warning]:", localCancelErr);

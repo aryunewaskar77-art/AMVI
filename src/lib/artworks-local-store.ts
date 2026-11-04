@@ -162,6 +162,44 @@ export function updateLocalArtworkAvailability(
   }
 }
 
+export function restoreArtworkStock(
+  artworkId: string,
+  incrementBy: number = 1
+): { remainingQuantity: number; isAvailable: boolean } {
+  try {
+    ensureDataFile();
+    const existing = getLocalArtworks();
+    let remainingQuantity = 0;
+    let isAvailable = true;
+
+    const updated = existing.map((item) => {
+      if (item.id === artworkId) {
+        const currentQty =
+          typeof item.quantity === "number" && item.quantity >= 0
+            ? item.quantity
+            : 0;
+        const newQty = currentQty + incrementBy;
+        remainingQuantity = newQty;
+        isAvailable = newQty > 0;
+
+        return {
+          ...item,
+          quantity: newQty,
+          total_stock: Math.max(newQty, item.total_stock || newQty),
+          is_available: isAvailable,
+        };
+      }
+      return item;
+    });
+
+    fs.writeFileSync(ARTWORKS_FILE, JSON.stringify(updated, null, 2), "utf8");
+    return { remainingQuantity, isAvailable };
+  } catch (e) {
+    console.error("[LocalArtworksStore] restoreArtworkStock error:", e);
+    return { remainingQuantity: 0, isAvailable: false };
+  }
+}
+
 export function deductArtworkStock(
   artworkId: string,
   decrementBy: number = 1

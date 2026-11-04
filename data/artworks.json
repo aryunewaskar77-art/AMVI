@@ -8,9 +8,9 @@
     "medium": "pgoto",
     "dimensions": "24inches",
     "image_url": "/uploads/1793774827867-014f6a7a.png",
-    "quantity": 1,
+    "quantity": 0,
     "total_stock": 1,
-    "is_available": true,
+    "is_available": false,
     "created_at": "2026-11-04T06:47:09.966Z"
   },
   {
