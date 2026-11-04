@@ -1,26 +1,11 @@
-import { Suspense } from "react";
-import { getAvailableArtworks } from "@/lib/artworks";
-import { getArtworkLockStatus } from "@/lib/locks";
-import { ArtworkGridClient } from "@/components/catalog/ArtworkGridClient";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ShieldCheck, Sparkles, Loader2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Sparkles } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default async function HomePage() {
-  const artworks = await getAvailableArtworks();
-
-  // Inspect lock statuses concurrently
-  const lockEntries = await Promise.all(
-    artworks.map(async (artwork) => {
-      const lock = await getArtworkLockStatus(artwork.id);
-      return [artwork.id, lock.isLocked] as const;
-    })
-  );
-  const lockedMap = Object.fromEntries(lockEntries);
-
+export default function HomePage() {
   return (
     <div className="flex flex-col space-y-20 pb-24">
       {/* Editorial Hero Banner */}
@@ -78,33 +63,6 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Artwork Catalog Gallery */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col sm:flex-row items-baseline justify-between border-b border-stone-200 pb-6 mb-10">
-          <div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-medium text-stone-900">
-              Curated Masterpiece Collection
-            </h2>
-            <p className="mt-1 text-xs text-stone-500 uppercase tracking-widest">
-              Available Original Works ({artworks.length} Pieces)
-            </p>
-          </div>
-        </div>
-
-        <Suspense
-          fallback={
-            <div className="flex justify-center py-20">
-              <Loader2 className="h-6 w-6 animate-spin text-stone-400" />
-            </div>
-          }
-        >
-          <ArtworkGridClient
-            initialArtworks={artworks}
-            lockedMap={lockedMap}
-          />
-        </Suspense>
       </section>
 
       {/* Provenance & Guarantee Section */}
